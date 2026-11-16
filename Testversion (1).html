@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP-CSP | Unit 2 Final Assessment</title>
+<style>
+:root{--navy:#12304a;--blue:#1e5b86;--gold:#ffd447;--paper:#f4f7fb;--ink:#172536;--muted:#5d6b7a;--green:#18794e;--red:#b42318;--line:#d8e0e9}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,#102d46,#1d5a83);color:white;padding:28px 20px}
+.wrap{max-width:1050px;margin:auto}header h1{margin:0 0 6px;font-size:clamp(1.5rem,4vw,2.2rem)}header p{margin:0;color:#e5eff7}
+main{padding:22px 16px 50px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#e5edf5;color:#24435e;padding:7px 11px;border-radius:20px;font-size:.88rem;font-weight:bold}
+button,select,input{font:inherit}button{border:0;border-radius:9px;padding:11px 16px;font-weight:bold;cursor:pointer;transition:opacity .15s,background .15s}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #f2b800;outline-offset:2px}
+.primary{background:var(--gold);color:#252525}.secondary{background:#e5edf5;color:#173b58}.submit-btn{background:var(--green);color:white}
+.progress-shell{height:10px;background:#e0e7ef;border-radius:10px;overflow:hidden;margin:12px 0 20px}.progress{height:100%;width:0;background:var(--blue);transition:width .25s}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:18px;align-items:start}
+.card{background:white;border:1px solid var(--line);border-radius:15px;padding:22px;box-shadow:0 4px 15px #19324a0a}
+.sidebar{position:sticky;top:12px}.side-title{font-size:1rem;margin:0 0 10px}.stat{padding:10px 0;border-bottom:1px solid var(--line)}.stat:last-child{border:0}.stat strong{display:block;font-size:1.35rem;color:var(--navy)}
+.topic{color:var(--blue);font-weight:bold;font-size:.88rem;text-transform:uppercase;letter-spacing:.04em}
+.question-title{font-size:1.25rem;margin:8px 0 14px}.prompt{margin:0 0 14px}.code{background:#101d2b;color:#e8f1fa;padding:16px;border-radius:10px;overflow:auto;font:14px/1.55 Consolas,Monaco,monospace;white-space:pre;margin:12px 0}
+.options{display:grid;gap:10px;margin:18px 0}.option{display:flex;align-items:flex-start;gap:11px;text-align:left;background:#f8fafc;border:2px solid #d7e0e9;color:var(--ink);padding:13px;border-radius:10px;font-weight:normal}.option:hover:not(:disabled){border-color:#6394b8;background:#f0f6fb}.option .letter{font-weight:bold;color:#315d7c;min-width:22px}.option.selected{border-color:var(--blue);background:#eaf3fa;font-weight:bold}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}.actions .right{display:flex;gap:10px}
+.small{font-size:.9rem;color:var(--muted)}.hidden{display:none!important}.result{text-align:center;max-width:680px;margin:auto}.result .big{font-size:3rem;font-weight:800;color:var(--navy);margin:10px 0}
+.form-group{margin-bottom:16px;text-align:left}.form-group label{display:block;font-weight:bold;margin-bottom:6px;font-size:.92rem}.form-group input,.form-group select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink)}
+.q-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
+.q-dot{padding:7px 0;border-radius:6px;font-size:.82rem;background:#f0f4f8;color:var(--ink);border:1px solid var(--line);text-align:center;cursor:pointer}
+.q-dot.answered{background:var(--navy);color:white;border-color:var(--navy)}
+.q-dot.current{outline:2px solid var(--gold); font-weight:800}
+.status-box{margin:18px 0;padding:14px;border-radius:10px;font-size:.92rem;border:1px solid var(--line);background:#f8fafc}
+.status-box.ok{background:#eaf7ef;border-color:#9bd0af;color:#17633f}
+.status-box.warn{background:#fff8e6;border-color:#f2c968;color:#73510d}
+.breakdown-table{width:100%;border-collapse:collapse;margin:18px 0;text-align:left;font-size:.92rem}
+.breakdown-table th,.breakdown-table td{padding:10px 12px;border-bottom:1px solid var(--line)}
+.breakdown-table th{background:#f0f4f8;color:var(--navy)}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.sidebar{position:static;order:-1}.card{padding:17px}.toolbar{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>AP-CSP · Final Assessment</h1>
+<p>Unit 2 Assessment · Boolean Expressions, If Statements &amp; Nested If Statements</p>
+</div></header>
+
+<main class="wrap">
+  <div class="toolbar">
+    <div class="pills">
+      <span class="pill">Topic 2.2 · Boolean Expressions</span>
+      <span class="pill">Topic 2.3 · If Statements</span>
+      <span class="pill">Topic 2.4 · Nested If Statements</span>
+    </div>
+    <div id="studentBadge" class="small hidden"></div>
+  </div>
+
+  <!-- START SCREEN (Student Details for Google Sheets) -->
+  <section class="card" id="startScreen" style="max-width:580px;margin:20px auto">
+    <div class="topic">Assessment Check-In</div>
+    <h2 class="question-title">Enter Your Information to Begin</h2>
+    <p class="small" style="margin-bottom:18px">This is a scored final assessment (20 Multiple-Choice Questions). Correct answers are not shown during or after the test. You may review and change your answers before submitting.</p>
+    <form id="startForm">
+      <div class="form-group">
+        <label for="studentName">Full Name (Last, First) *</label>
+        <input type="text" id="studentName" required placeholder="e.g., Lovelace, Ada">
+      </div>
+      <div class="form-group">
+        <label for="studentId">Student ID or School Email *</label>
+        <input type="text" id="studentId" required placeholder="e.g., alovelace@school.edu">
+      </div>
+      <div class="form-group">
+        <label for="classPeriod">Class Period *</label>
+        <select id="classPeriod" required>
+          <option value="">Select Period...</option>
+          <option value="Period 1">Period 1</option>
+          <option value="Period 2">Period 2</option>
+          <option value="Period 3">Period 3</option>
+          <option value="Period 4">Period 4</option>
+          <option value="Period 5">Period 5</option>
+          <option value="Period 6">Period 6</option>
+          <option value="Period 7">Period 7</option>
+        </select>
+      </div>
+      <button type="submit" class="primary" style="width:100%">Start Final Assessment →</button>
+    </form>
+  </section>
+
+  <!-- EXAM INTERFACE -->
+  <div id="examContainer" class="hidden">
+    <div class="progress-shell" aria-label="Progress"><div class="progress" id="progress"></div></div>
+    <div class="layout">
+      <section class="card" id="quiz">
+        <div class="topic" id="topic">Topic 2.2 · Boolean Expressions</div>
+        <h2 class="question-title" id="qtitle">Question 1 of 20</h2>
+        <p class="prompt" id="prompt"></p>
+        <pre class="code" id="code"></pre>
+        <div class="options" id="options"></div>
+        <div class="actions">
+          <button class="secondary" id="prev" type="button">← Previous</button>
+          <div class="right">
+            <button class="secondary" id="next" type="button">Next →</button>
+            <button class="submit-btn hidden" id="submitExam" type="button">Submit Final Test ✓</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card sidebar">
+        <h2 class="side-title">Test Navigator</h2>
+        <div class="stat"><span class="small">Current Question</span><strong id="currentStat">1 / 20</strong></div>
+        <div class="stat"><span class="small">Answered</span><strong id="answeredStat">0 / 20</strong></div>
+        <div class="stat"><span class="small">Remaining</span><strong id="remainingStat">20</strong></div>
+        <div style="margin-top:12px">
+          <span class="small">Jump to question:</span>
+          <div class="q-grid" id="navGrid"></div>
+        </div>
+        <button class="submit-btn" id="sidebarSubmit" type="button" style="width:100%;margin-top:16px">Submit Assessment</button>
+      </aside>
+    </div>
+  </div>
+
+  <!-- FINAL SCORE SCREEN (No Answer Key) -->
+  <section class="card result hidden" id="results">
+    <div class="topic">Assessment Submitted</div>
+    <h2>Final Score</h2>
+    <div class="big" id="finalScore">0 / 20</div>
+    <p id="summary" style="font-size:1.1rem;font-weight:bold"></p>
+    <p class="small" id="timestampDisplay"></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Topic Area</th><th>Score</th><th>Percentage</th></tr>
+      </thead>
+      <tbody id="topicBreakdown"></tbody>
+    </table>
+
+    <div id="sheetStatus" class="status-box"></div>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+      <button class="secondary" id="retryPostBtn" type="button">↻ Retry Sending to Google Sheets</button>
+      <button class="secondary" id="downloadCsvBtn" type="button">⬇ Download Score Receipt (CSV)</button>
+    </div>
+  </section>
+</main>
+
+<footer>AP-CSP · Final Assessment Mode · Strictly Scored</footer>
+
+<script>
+// ============================================================================
+// ANTI-CHEATING DEFENSES
+// ============================================================================
+// 1. Disable Right-Click (Context Menu)
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// 2. Disable F12, Inspect Element, and View Source shortcuts
+document.addEventListener('keydown', e => {
+  const key = e.key.toUpperCase();
+  if (
+    key === 'F12' || 
+    (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J' || key === 'C')) || 
+    (e.ctrlKey && key === 'U') || 
+    (e.metaKey && e.altKey && (key === 'I' || key === 'J' || key === 'U'))
+  ) {
+    e.preventDefault();
+  }
+});
+
+// ============================================================================
+// GOOGLE SHEETS CONFIGURATION
+// ============================================================================
+const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVOSVyI19q2DlDuoWMPc7menpSNHC2MexOEzQ2ZOWas53Jwll5uBsgzTa2qe0D79VTqg/exec"; 
+
+// Assessment Question Bank (Explanations removed so students cannot inspect source for hints)
+const questions = [
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"What value is printed?",prompt:"Compare the two integer variables.",code:"int a = 5;\nint b = 5;\n\nSystem.out.println(a == b);",opts:["false","true","5","The code causes an error."],ans:1},
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"Evaluate an AND expression",prompt:"What value is printed?",code:"int x = 12;\n\nSystem.out.println(x > 10 && x < 15);",opts:["true","false","12","The code causes an error."],ans:0},
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"Evaluate an OR expression",prompt:"What value is printed?",code:"int x = 7;\n\nSystem.out.println(x < 5 || x == 7);",opts:["false","true","7","The code causes an error."],ans:1},
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"Use the NOT operator",prompt:"What value is printed?",code:"boolean ready = true;\n\nSystem.out.println(!ready);",opts:["true","false","ready","The code causes an error."],ans:1},
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"Choose a value that makes the expression true",prompt:"Which value of x makes this Boolean expression true?",code:"x >= 10 && x < 20",opts:["5","10","20","25"],ans:1},
+  {cat:"if",topic:"Topic 2.3 · If Statements",title:"Trace a basic if statement",prompt:"What is printed?",code:"int x = 10;\n\nif (x > 5)\n{\n    System.out.println(\"A\");\n}",opts:["A","Nothing","10","The code causes an error."],ans:0},
+  {cat:"if",topic:"Topic 2.3 · If Statements",title:"Trace an if-else statement",prompt:"What is printed?",code:"int x = 4;\n\nif (x > 5)\n{\n    System.out.println(\"A\");\n}\nelse\n{\n    System.out.println(\"B\");\n}",opts:["A","B","A and B","Nothing"],ans:1},
+  {cat:"if",topic:"Topic 2.3 · If Statements",title:"Compare independent if statements",prompt:"What lines are printed, in order?",code:"int x = 15;\n\nif (x > 10)\n{\n    System.out.println(\"Blue\");\n}\nif (x > 20)\n{\n    System.out.println(\"Red\");\n}\nif (x > 5)\n{\n    System.out.println(\"Yellow\");\n}",opts:["Blue","Red","Blue and Yellow","Blue, Red, and Yellow"],ans:2},
+  {cat:"if",topic:"Topic 2.3 · If Statements",title:"Trace an if-else-if chain",prompt:"What is printed?",code:"int score = 82;\n\nif (score >= 90)\n{\n    System.out.println(\"A\");\n}\nelse if (score >= 80)\n{\n    System.out.println(\"B\");\n}\nelse\n{\n    System.out.println(\"C\");\n}",opts:["A","B","C","A and B"],ans:1},
+  {cat:"if",topic:"Topic 2.3 · If Statements",title:"Determine the final variable value",prompt:"What value is stored in finalPrice after this code executes?",code:"double price = 200;\ndouble finalPrice;\n\nif (price >= 100)\n{\n    finalPrice = price - 25;\n}\nelse\n{\n    finalPrice = price;\n}",opts:["200","175","225","25"],ans:1},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Trace two nested conditions",prompt:"What is printed?",code:"int x = 10;\nint y = 20;\n\nif (x > 5)\n{\n    if (y > 15)\n    {\n        System.out.println(\"A\");\n    }\n}",opts:["A","Nothing","The code causes an error.","10"],ans:0},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Identify the outer else",prompt:"What is printed?",code:"int x = 4;\nint y = 10;\n\nif (x > 5)\n{\n    if (y > 5)\n    {\n        System.out.println(\"A\");\n    }\n    else\n    {\n        System.out.println(\"B\");\n    }\n}\nelse\n{\n    System.out.println(\"C\");\n}",opts:["A","B","C","Nothing"],ans:2},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Evaluate both nested conditions",prompt:"What is printed?",code:"int x = 10;\nint y = 5;\n\nif (x >= 10)\n{\n    if (y == 5)\n    {\n        System.out.println(\"Success\");\n    }\n}",opts:["Success","Nothing","The code causes an error.","false"],ans:0},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Trace an if-else-if chain",prompt:"What is printed?",code:"int x = 8;\nint y = 12;\n\nif (x > 10)\n{\n    System.out.println(\"A\");\n}\nelse if (y > 10)\n{\n    System.out.println(\"B\");\n}\nelse\n{\n    System.out.println(\"C\");\n}",opts:["A","B","C","A and B"],ans:1},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Trace the inner else",prompt:"What is printed?",code:"int x = 6;\nint y = 3;\n\nif (x > 5)\n{\n    if (y > 5)\n    {\n        System.out.println(\"A\");\n    }\n    else\n    {\n        System.out.println(\"B\");\n    }\n}",opts:["A","B","Nothing","The code causes an error."],ans:1},
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"Understand assignment and comparison",prompt:"Which statement correctly describes the difference between = and == in Java?",code:"int score = 90;\nboolean passed = (score == 90);",opts:["Both operators assign values.","= compares values; == assigns values.","= assigns a value; == compares two values.","Neither operator is valid in Java."],ans:2},
+  {cat:"if",topic:"Topic 2.3 · If Statements",title:"Determine whether both independent if statements run",prompt:"What is printed?",code:"int n = 9;\n\nif (n > 5)\n{\n    System.out.println(\"First\");\n}\nif (n < 10)\n{\n    System.out.println(\"Second\");\n}",opts:["First only","Second only","First, then Second","Nothing"],ans:2},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Understand nested-if execution",prompt:"Why does the inner if statement not execute when the outer condition is false?",code:"if (temperature > 80)\n{\n    if (humidity > 60)\n    {\n        System.out.println(\"Hot and humid\");\n    }\n}",opts:["Java ignores all inner if statements.","The inner statement is inside the outer block, which is skipped.","The inner condition is automatically false.","Nested if statements are not allowed."],ans:1},
+  {cat:"boolean",topic:"Topic 2.2 · Boolean Expressions",title:"Compare AND and OR",prompt:"Which statement about && and || is correct?",code:"A && B     // AND\nA || B     // OR",opts:["&& needs at least one true condition; || needs both true.","&& needs both conditions true; || needs at least one true.","Both operators always produce true.","Both operators mean NOT."],ans:1},
+  {cat:"nested",topic:"Topic 2.4 · Nested If Statements",title:"Determine which else is matched",prompt:"If the outer condition is false, which message prints?",code:"int a = 2;\nint b = 9;\n\nif (a > 5)\n{\n    if (b > 5)\n    {\n        System.out.println(\"Inside\");\n    }\n}\nelse\n{\n    System.out.println(\"Outside\");\n}",opts:["Inside","Outside","Both","Nothing"],ans:1}
+];
+
+let index = 0;
+let responses = {}; // stores { questionIndex: chosenOptionIndex }
+let submitted = false;
+let studentInfo = { name: "", id: "", period: "", startedAt: "" };
+let finalPayload = null;
+
+const $ = id => document.getElementById(id);
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// Start Exam Handler
+$("startForm").addEventListener("submit", e => {
+  e.preventDefault();
+  studentInfo.name = $("studentName").value.trim();
+  studentInfo.id = $("studentId").value.trim();
+  studentInfo.period = $("classPeriod").value;
+  studentInfo.startedAt = new Date().toISOString();
+
+  $("studentBadge").textContent = `${studentInfo.name} (${studentInfo.period})`;
+  $("studentBadge").classList.remove("hidden");
+  $("startScreen").classList.add("hidden");
+  $("examContainer").classList.remove("hidden");
+  render();
+});
+
+function render() {
+  const q = questions[index];
+  $("topic").textContent = q.topic;
+  $("qtitle").textContent = `Question ${index + 1} of ${questions.length}: ${q.title}`;
+  $("prompt").textContent = q.prompt;
+  $("code").textContent = q.code;
+  $("options").innerHTML = "";
+
+  const chosen = responses[index];
+
+  q.opts.forEach((optText, i) => {
+    const b = document.createElement("button");
+    b.className = "option" + (chosen === i ? " selected" : "");
+    b.type = "button";
+    b.innerHTML = `<span class="letter">${String.fromCharCode(65 + i)}.</span><span>${escapeHtml(optText)}</span>`;
+    b.addEventListener("click", () => selectOption(i));
+    $("options").appendChild(b);
+  });
+
+  // Navigation button states
+  $("prev").disabled = (index === 0);
+  if (index === questions.length - 1) {
+    $("next").classList.add("hidden");
+    $("submitExam").classList.remove("hidden");
+  } else {
+    $("next").classList.remove("hidden");
+    $("submitExam").classList.add("hidden");
+  }
+
+  // Progress & Sidebar Stats
+  const answeredCount = Object.keys(responses).length;
+  const remainingCount = questions.length - answeredCount;
+  $("currentStat").textContent = `${index + 1} / ${questions.length}`;
+  $("answeredStat").textContent = `${answeredCount} / ${questions.length}`;
+  $("remainingStat").textContent = `${remainingCount}`;
+  $("progress").style.width = `${(answeredCount / questions.length) * 100}%`;
+
+  renderNavGrid();
+}
+
+function renderNavGrid() {
+  const grid = $("navGrid");
+  grid.innerHTML = "";
+  questions.forEach((_, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "q-dot" + (responses[i] !== undefined ? " answered" : "") + (i === index ? " current" : "");
+    btn.textContent = i + 1;
+    btn.addEventListener("click", () => { index = i; render(); });
+    grid.appendChild(btn);
+  });
+}
+
+function selectOption(choiceIndex) {
+  if (submitted) return;
+  responses[index] = choiceIndex;
+  render();
+}
+
+function attemptSubmit() {
+  if (submitted) return;
+  const answeredCount = Object.keys(responses).length;
+  const unanswered = questions.length - answeredCount;
+
+  if (unanswered > 0) {
+    const confirmIncomplete = confirm(`You still have ${unanswered} unanswered question(s). Unanswered questions will be scored as incorrect.\n\nAre you sure you want to submit your final test?`);
+    if (!confirmIncomplete) return;
+  } else {
+    const confirmFinal = confirm("Are you ready to submit your Final Assessment? You will not be able to change your answers after submitting.");
+    if (!confirmFinal) return;
+  }
+
+  gradeAndFinish();
+}
+
+function gradeAndFinish() {
+  submitted = true;
+  let totalCorrect = 0;
+
+  const catStats = {
+    boolean: { label: "Topic 2.2 · Boolean Expressions", correct: 0, total: 0 },
+    if:      { label: "Topic 2.3 · If Statements", correct: 0, total: 0 },
+    nested:  { label: "Topic 2.4 · Nested If Statements", correct: 0, total: 0 }
+  };
+
+  const itemDetails = {};
+
+  questions.forEach((q, i) => {
+    const choice = responses[i];
+    const isCorrect = (choice === q.ans);
+    if (isCorrect) totalCorrect++;
+
+    catStats[q.cat].total++;
+    if (isCorrect) catStats[q.cat].correct++;
+
+    const chosenLetter = choice !== undefined ? String.fromCharCode(65 + choice) : "Blank";
+    itemDetails[`Q${i + 1}`] = `${chosenLetter} (${isCorrect ? 1 : 0})`;
+  });
+
+  const percentage = Math.round((totalCorrect / questions.length) * 100);
+  const submittedAt = new Date().toLocaleString();
+
+  // Build Payload for Google Sheets
+  finalPayload = {
+    timestamp: submittedAt,
+    studentName: studentInfo.name,
+    studentId: studentInfo.id,
+    classPeriod: studentInfo.period,
+    score: totalCorrect,
+    possible: questions.length,
+    percentage: percentage,
+    booleanScore: `${catStats.boolean.correct}/${catStats.boolean.total}`,
+    ifScore: `${catStats.if.correct}/${catStats.if.total}`,
+    nestedScore: `${catStats.nested.correct}/${catStats.nested.total}`,
+    responses: itemDetails
+  };
+
+  // Update Results UI (Strict scoring only - no answers shown)
+  $("examContainer").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  $("finalScore").textContent = `${totalCorrect} / ${questions.length} (${percentage}%)`;
+  $("summary").textContent = `${studentInfo.name} · ${studentInfo.period}`;
+  $("timestampDisplay").textContent = `Submitted: ${submittedAt}`;
+
+  $("topicBreakdown").innerHTML = Object.values(catStats).map(s => {
+    const pct = Math.round((s.correct / s.total) * 100);
+    return `<tr><td>${s.label}</td><td>${s.correct} / ${s.total}</td><td>${pct}%</td></tr>`;
+  }).join("");
+
+  postScoreToGoogleSheets();
+}
+
+async function postScoreToGoogleSheets() {
+  const box = $("sheetStatus");
+  if (!GOOGLE_SHEETS_WEB_APP_URL) {
+    box.className = "status-box warn";
+    box.textContent = "Google Sheets Web App URL is not configured yet. Once we link your Google Sheet, scores will automatically post here. You can download a CSV backup below.";
+    return;
+  }
+
+  box.className = "status-box";
+  box.textContent = "Submitting score to Google Sheets gradebook...";
+
+  try {
+    await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(finalPayload)
+    });
+    box.className = "status-box ok";
+    box.textContent = "✓ Score successfully recorded to the Google Sheets gradebook.";
+  } catch (err) {
+    box.className = "status-box warn";
+    box.textContent = "⚠ Could not reach Google Sheets automatically. Please click 'Retry' or download your CSV score receipt.";
+  }
+}
+
+function downloadCsvReceipt() {
+  if (!finalPayload) return;
+  const headers = ["Timestamp","Student Name","Student ID","Period","Score","Possible","Percentage","Topic 2.2 (Boolean)","Topic 2.3 (If)","Topic 2.4 (Nested)"];
+  const qHeaders = questions.map((_, i) => `Q${i + 1}`);
+  const row = [
+    finalPayload.timestamp,
+    finalPayload.studentName,
+    finalPayload.studentId,
+    finalPayload.classPeriod,
+    finalPayload.score,
+    finalPayload.possible,
+    `${finalPayload.percentage}%`,
+    finalPayload.booleanScore,
+    finalPayload.ifScore,
+    finalPayload.nestedScore,
+    ...qHeaders.map(k => finalPayload.responses[k])
+  ];
+
+  const csvContent = [
+    [...headers, ...qHeaders].join(","),
+    row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `APCSP_Unit2_Test_${studentInfo.name.replace(/[^a-z0-9]/gi, "_")}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+$("prev").addEventListener("click", () => { if (index > 0) { index--; render(); } });
+$("next").addEventListener("click", () => { if (index < questions.length - 1) { index++; render(); } });
+$("submitExam").addEventListener("click", attemptSubmit);
+$("sidebarSubmit").addEventListener("click", attemptSubmit);
+$("retryPostBtn").addEventListener("click", postScoreToGoogleSheets);
+$("downloadCsvBtn").addEventListener("click", downloadCsvReceipt);
+</script>
+</body>
+</html>
